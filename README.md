@@ -29,6 +29,8 @@ The flows are contained in the folder "flows".  They are compacted text files th
 
 ### Date/Time flow
 This flow creates the date & time banner at the top.
+![](img/date-time.jpg)
 
 ### Power flow
 This flow displays AC & DC power as well as solar power and battery state of charge.
+![](img/power.jpg)
