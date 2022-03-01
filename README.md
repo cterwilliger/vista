@@ -36,7 +36,7 @@ This flow displays AC & DC power as well as solar power and battery state of cha
 ![](img/power.jpg)
 ### Temperatures flow
 This flow displays Temperatures of the generator bay, battery bay, and wet bay.  Certainly other temperatures could be displayed if desired.
-![](img/temperature.jpg)
+![](img/temperatures.jpg)
 
 ### Tanks flow
 This flow displays the levels of the fresh, black, and grey tanks.
@@ -61,3 +61,7 @@ This flow shows a map from OpenStreetMap and an aviation style compass rose.  Th
 ### Network flow
 This flow shows the four main signal strenth values from a cellular modem.  This is highly dependent on the specific modem you are using.  Other things could be integrated such as download/upload speeds.
 ![](img/network.jpg)
+
+### Air Quality flow
+This flow displays air quality data from an Ikea Vindriktning device.
+![](img/air-quality.jpg)
