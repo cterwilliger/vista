@@ -1,0 +1,622 @@
+[
+    {
+        "id": "4a68d055.f3abe",
+        "type": "tab",
+        "label": "Map",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ed6ec38.70fa14",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "{}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 940,
+        "wires": [
+            [
+                "6275b48b.7e58fc"
+            ]
+        ]
+    },
+    {
+        "id": "6275b48b.7e58fc",
+        "type": "template",
+        "z": "4a68d055.f3abe",
+        "name": "Display",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!–– 9x10 squares x 48 pixels per square -->\n<iframe src=\"/worldmap\" height=432 width=480></iframe>",
+        "output": "str",
+        "x": 280,
+        "y": 940,
+        "wires": [
+            [
+                "25e4aa93.69a416"
+            ]
+        ]
+    },
+    {
+        "id": "25e4aa93.69a416",
+        "type": "ui_template",
+        "z": "4a68d055.f3abe",
+        "group": "682055e8.29f40c",
+        "name": "Map",
+        "order": 5,
+        "width": 10,
+        "height": 9,
+        "format": "<div align=center ng-bind-html=\"msg.payload | trusted\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "x": 470,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af613dd2.309ed",
+        "type": "worldmap",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "lat": "37.922721",
+        "lon": "-99.410052",
+        "zoom": "10",
+        "layer": "OSM",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "true",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "false",
+        "coords": "none",
+        "showgrid": "true",
+        "path": "/worldmap",
+        "x": 800,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "1d83fe4c.3d0c32",
+        "type": "ui_text",
+        "z": "4a68d055.f3abe",
+        "group": "682055e8.29f40c",
+        "order": 1,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Lat",
+        "format": "{{msg.payload.lat | number:6}}",
+        "layout": "row-left",
+        "x": 550,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c260afb3.51b99",
+        "type": "gpsd",
+        "z": "4a68d055.f3abe",
+        "name": "vista-gpsd",
+        "hostname": "localhost",
+        "port": "2947",
+        "tpv": true,
+        "sky": true,
+        "info": false,
+        "device": false,
+        "gst": false,
+        "att": false,
+        "x": 100,
+        "y": 260,
+        "wires": [
+            [
+                "8e7160a3.964bd",
+                "1d83fe4c.3d0c32",
+                "ac38dbd1.d4a008",
+                "a2759d06.141fc",
+                "81756a6e.8a0498",
+                "534b458.a90f7bc",
+                "16c9683b.f277d8",
+                "346e9eea.563482"
+            ]
+        ]
+    },
+    {
+        "id": "8e7160a3.964bd",
+        "type": "function",
+        "z": "4a68d055.f3abe",
+        "name": "format for worldmap",
+        "func": "return {\n    payload: {\n        name: 'Lola',\n        lat: msg.payload.lat,\n        lon: msg.payload.lon,\n        //icon: 'bus'\n        icon: 'dot-circle-o'\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 600,
+        "y": 340,
+        "wires": [
+            [
+                "af613dd2.309ed"
+            ]
+        ]
+    },
+    {
+        "id": "2b3d8d95.e7cdd2",
+        "type": "comment",
+        "z": "4a68d055.f3abe",
+        "name": "Map & Compass",
+        "info": "",
+        "x": 120,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ac38dbd1.d4a008",
+        "type": "ui_text",
+        "z": "4a68d055.f3abe",
+        "group": "682055e8.29f40c",
+        "order": 2,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Lon",
+        "format": "{{msg.payload.lon | number:6}}",
+        "layout": "row-left",
+        "x": 550,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "8c961c17.997dd",
+        "type": "ui_text",
+        "z": "4a68d055.f3abe",
+        "group": "682055e8.29f40c",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Alt",
+        "format": "{{value | number:0}} ft",
+        "layout": "row-right",
+        "x": 690,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "a2759d06.141fc",
+        "type": "function",
+        "z": "4a68d055.f3abe",
+        "name": "m to ft",
+        "func": "msg.payload = msg.payload.alt * 3.281\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 280,
+        "wires": [
+            [
+                "8c961c17.997dd"
+            ]
+        ]
+    },
+    {
+        "id": "534b458.a90f7bc",
+        "type": "function",
+        "z": "4a68d055.f3abe",
+        "name": "pos to bearing",
+        "func": "// compute bearing from two consecutive positions\n// φ1 = lat1, λ1 = lon1\n//\nvar φ1=context.get('φ1') || 0;  // get stored value, 0 if not available\nvar λ1=context.get('λ1') || 0;\n\nvar φ2 = msg.payload.lat * Math.PI/180; // convert deg to rad\nvar λ2 = msg.payload.lon * Math.PI/180;\n\nconst y = Math.sin(λ2-λ1) * Math.cos(φ2);\nconst x = Math.cos(φ1)*Math.sin(φ2) -\n          Math.sin(φ1)*Math.cos(φ2)*Math.cos(λ2-λ1);\nconst θ = Math.atan2(y, x);\nconst bearing = (θ*180/Math.PI + 360) % 360; // in degrees\n\ncontext.set(\"φ1\", φ2); // store lat2 as lat1\ncontext.set(\"λ1\", λ2); // store lon2 as lon1\n\nmsg = { payload: bearing};\n\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 580,
+        "y": 400,
+        "wires": [
+            [
+                "b3443828.574178"
+            ]
+        ]
+    },
+    {
+        "id": "b3443828.574178",
+        "type": "ui_template",
+        "z": "4a68d055.f3abe",
+        "group": "d35d48b7.9f3008",
+        "name": "Compass",
+        "order": 1,
+        "width": 6,
+        "height": 6,
+        "format": "<html>\n<head>\n  <style>\n    .rose\n    {\n        width: 220px;\n        height: 220px;\n        position:relative;\n        top: 44px;\n        left: 44px;\n        z-index: 1;\n        \n        transform:rotate({{360-msg.payload}}deg);\n        transition: all 1s ease;\n    }\n    .arrow\n    {\n        width: 30px;\n        height: 120px;\n        position: absolute;\n        left: 144px;\n        top: 98px;\n        z-index: 2;\n    }\n  </style>\n</head>\n<body>\n  <img src=\"/rose7.png\" class=\"rose\">\n  <img src=\"/arrow.png\" class=\"arrow\">\n  \n  <div style=\"width: 100%; height: 8px; text-align: center; position: relative; top: 50px; left: 0px; z-index: 2\">\n    <span style=\"font-size: 24px; background-color: #333333\">\n      {{msg.payload | number:0}}&deg;\n    </span>\n  </div>\n\n\n\n</body>\n</html>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 1040,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "81756a6e.8a0498",
+        "type": "link out",
+        "z": "4a68d055.f3abe",
+        "name": "gps for weather",
+        "links": [
+            "507f5b18.4abda4"
+        ],
+        "x": 315,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "1bf58654.6da4ca",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "los angeles",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"lat\":\"34.101392\",\"lon\":\"-118.340628\"}",
+        "payloadType": "json",
+        "x": 570,
+        "y": 480,
+        "wires": [
+            [
+                "534b458.a90f7bc"
+            ]
+        ]
+    },
+    {
+        "id": "33faff53.c0c15",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "denver",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"lat\":\"39.728486\",\"lon\":\"-104.950222\"}",
+        "payloadType": "json",
+        "x": 590,
+        "y": 520,
+        "wires": [
+            [
+                "534b458.a90f7bc"
+            ]
+        ]
+    },
+    {
+        "id": "9ccca369.ead02",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "el paso",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"lat\":\"31.840810\",\"lon\":\"-106.460233\"}",
+        "payloadType": "json",
+        "x": 590,
+        "y": 560,
+        "wires": [
+            [
+                "534b458.a90f7bc"
+            ]
+        ]
+    },
+    {
+        "id": "97816e71.d74a7",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "billings",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"lat\":\"45.774954\",\"lon\":\"-108.545834\"}",
+        "payloadType": "json",
+        "x": 590,
+        "y": 600,
+        "wires": [
+            [
+                "534b458.a90f7bc"
+            ]
+        ]
+    },
+    {
+        "id": "16c9683b.f277d8",
+        "type": "debug",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a2b09448.4ef4b8",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "45",
+        "payloadType": "num",
+        "x": 830,
+        "y": 480,
+        "wires": [
+            [
+                "b3443828.574178"
+            ]
+        ]
+    },
+    {
+        "id": "d2ca5ccd.952ae",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 830,
+        "y": 520,
+        "wires": [
+            [
+                "b3443828.574178"
+            ]
+        ]
+    },
+    {
+        "id": "9261b3c4.a424d",
+        "type": "exec",
+        "z": "4a68d055.f3abe",
+        "command": "echo \"eng25ine\" | sudo -kS service gpsd restart",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "restart gpsd",
+        "x": 770,
+        "y": 780,
+        "wires": [
+            [
+                "30b903d1.b587fc"
+            ],
+            [
+                "30b903d1.b587fc"
+            ],
+            [
+                "30b903d1.b587fc"
+            ]
+        ]
+    },
+    {
+        "id": "346e9eea.563482",
+        "type": "trigger",
+        "z": "4a68d055.f3abe",
+        "name": "Watchdog",
+        "op1": "",
+        "op2": "timeout",
+        "op1type": "nul",
+        "op2type": "str",
+        "duration": "60",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 580,
+        "y": 780,
+        "wires": [
+            [
+                "9261b3c4.a424d",
+                "d36eb6ea.f022d8"
+            ]
+        ]
+    },
+    {
+        "id": "d36eb6ea.f022d8",
+        "type": "debug",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "ba4f9da.3d9fd6",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "kick it",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 590,
+        "y": 740,
+        "wires": [
+            [
+                "9261b3c4.a424d"
+            ]
+        ]
+    },
+    {
+        "id": "30b903d1.b587fc",
+        "type": "debug",
+        "z": "4a68d055.f3abe",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "d8cbe7c7.d334a8",
+        "type": "inject",
+        "z": "4a68d055.f3abe",
+        "name": "Red Bay",
+        "props": [
+            {
+                "p": "payload.lat",
+                "v": "34.45673",
+                "vt": "str"
+            },
+            {
+                "p": "payload.lon",
+                "v": "-88.15335",
+                "vt": "str"
+            },
+            {
+                "p": "payload.alt",
+                "v": "182.88",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "8e7160a3.964bd",
+                "81756a6e.8a0498",
+                "1d83fe4c.3d0c32"
+            ]
+        ]
+    },
+    {
+        "id": "87e445c.fb1cab8",
+        "type": "comment",
+        "z": "4a68d055.f3abe",
+        "name": "Restart gpsd if it stops.  Only works one time...",
+        "info": "",
+        "x": 690,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "ac89f039.25556",
+        "type": "comment",
+        "z": "4a68d055.f3abe",
+        "name": "no gps available",
+        "info": "",
+        "x": 120,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "682055e8.29f40c",
+        "type": "ui_group",
+        "name": "Location",
+        "tab": "e9485d74.46613",
+        "order": 8,
+        "disp": false,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "d35d48b7.9f3008",
+        "type": "ui_group",
+        "name": "Compass",
+        "tab": "e9485d74.46613",
+        "order": 9,
+        "disp": false,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e9485d74.46613",
+        "type": "ui_tab",
+        "name": "Vista",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

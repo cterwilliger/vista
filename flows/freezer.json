@@ -1,0 +1,716 @@
+[
+    {
+        "id": "d5acb2a.2ea075",
+        "type": "tab",
+        "label": "Freezer",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a46eb01d.f3526",
+        "type": "udp out",
+        "z": "d5acb2a.2ea075",
+        "name": "discover",
+        "addr": "192.168.10.255",
+        "iface": "",
+        "port": "13142",
+        "ipv": "udp4",
+        "outport": "55555",
+        "base64": false,
+        "multicast": "broad",
+        "x": 300,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1792322c.8d4aae",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "DDMD",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "string"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "DDMD",
+        "payloadType": "str",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "a46eb01d.f3526"
+            ]
+        ]
+    },
+    {
+        "id": "bfdb2018.901c8",
+        "type": "udp in",
+        "z": "d5acb2a.2ea075",
+        "name": "discover response",
+        "iface": "",
+        "port": "55555",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "c85dda0e.d36a88"
+            ]
+        ]
+    },
+    {
+        "id": "c85dda0e.d36a88",
+        "type": "change",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ip",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 160,
+        "wires": [
+            [
+                "30408bc4.39e694"
+            ]
+        ]
+    },
+    {
+        "id": "f3244387.823ab",
+        "type": "tcp request",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "server": "192.168.10.116",
+        "port": "13142",
+        "out": "sit",
+        "splitc": " ",
+        "name": "connect",
+        "x": 460,
+        "y": 320,
+        "wires": [
+            [
+                "1c14875.f290779",
+                "af5051bf.da7bf"
+            ]
+        ]
+    },
+    {
+        "id": "e866be72.5d501",
+        "type": "ui_text",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "group": "c0ef364f.a66918",
+        "order": 2,
+        "width": 3,
+        "height": 2,
+        "name": "",
+        "label": "Freezer",
+        "format": "{{msg.payload}} &degF",
+        "layout": "col-center",
+        "x": 1180,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "71abdeb3.9091d",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "name": "decode fahenheit",
+        "func": "// {\"ddmp\":[0,0,1,1,1,86,255]}\n\nvar arr = msg.payload.ddmp;\n\nif ( arr[0] === 0 & \n     arr[1] === 0 & \n     arr[2] === 1 &\n     arr[3] === 1 &\n     arr[4] === 1 )\n     {\n         var temp = (arr[5] - 81) / 5;\n         msg = { payload: temp};\n         return msg;\n     }\n\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 790,
+        "y": 400,
+        "wires": [
+            [
+                "c8cb88a7.5da9d8",
+                "e866be72.5d501",
+                "2566131d.bc532c"
+            ]
+        ]
+    },
+    {
+        "id": "d9dcf166.a3f72",
+        "type": "json",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 610,
+        "y": 400,
+        "wires": [
+            [
+                "71abdeb3.9091d",
+                "93882edf.e1889",
+                "db0aab68.5d9aa8",
+                "d37dc93.e0a7938"
+            ]
+        ]
+    },
+    {
+        "id": "25ee29cf.d0a4c6",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "remove \\r",
+        "func": "var str = msg.payload.toString();\nmsg.payload = str.replace(/\\r/,\"\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 640,
+        "y": 600,
+        "wires": [
+            [
+                "d9dcf166.a3f72"
+            ]
+        ]
+    },
+    {
+        "id": "93882edf.e1889",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "name": "decode celsius",
+        "func": "// {\"ddmp\":[0,0,1,3,1,24,1]}\n\nvar arr = msg.payload.ddmp;\n\nif ( arr[0] === 0 & \n     arr[1] === 0 & \n     arr[2] === 1 &\n     arr[3] === 3 &\n     arr[4] === 1 )\n     {\n         var temp = arr[5];\n         msg = { payload: temp};\n         return msg;\n     }\n\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 780,
+        "y": 440,
+        "wires": [
+            [
+                "1d501957.4f3a87",
+                "1d89cfb5.6cf8f"
+            ]
+        ]
+    },
+    {
+        "id": "1d501957.4f3a87",
+        "type": "ui_text",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "group": "c0ef364f.a66918",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "temp C",
+        "format": "{{msg.payload}} C",
+        "layout": "col-center",
+        "x": 1000,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "2566131d.bc532c",
+        "type": "trigger",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "op1": "",
+        "op2": "XX",
+        "op1type": "pay",
+        "op2type": "str",
+        "duration": "10",
+        "extend": true,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1010,
+        "y": 360,
+        "wires": [
+            [
+                "e866be72.5d501",
+                "426da55e.db681c"
+            ]
+        ]
+    },
+    {
+        "id": "c8cb88a7.5da9d8",
+        "type": "debug",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1190,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "e06c47bc.3418d8",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "CFX3 Startup",
+        "func": "// Startup message handler for Dometic CFX3 Cooler\n\n// send {2] - seems to be a connection request\nvar connectMsg = Buffer.from([0x7B, 0x22, 0x64, 0x64, 0x6D, 0x70, 0x22, 0x3A, 0x5B, 0x32, 0x5D, 0x7D, 0x0D]);\n\n// send [4] - seems to be an acknowledgment to a received message from the cooler\nvar ackMsg = Buffer.from([0x7B, 0x22, 0x64, 0x64, 0x6D, 0x70, 0x22, 0x3A, 0x5B, 0x34, 0x5D, 0x7D, 0x0D]);\n\n// send [1,1,0,0,129] - seems to be some sort of configuration.  Once this is sent, the cooler starts sending data\nvar configMsg = Buffer.from([0x7B, 0x22, 0x64, 0x64, 0x6D, 0x70, 0x22, 0x3A, 0x5B, 0x31, 0x2c, 0x31, 0x2c, 0x30, 0x2c, 0x30, 0x2c, 0x31, 0x32, 0x39, 0x5D, 0x7D, 0x0D]);\n\n//msg.host = \"192.168.10.116\" \n//msg.port = \"13142\"\n\nvar arr = msg.payload.ddmp;\n\nswitch(context.get(\"state\")) {\n  case \"start\":\n    msg = {payload:connectMsg};\n    node.send(msg);\n    context.set(\"state\", \"connectRequested\");\n    node.done();\n    break;\n  case \"connectRequested\":\n    msg = {payload:configMsg};\n    node.send(msg);\n    context.set(\"state\", \"run\");\n    node.done();\n    break;\n  case \"run\":\n    if ( arr[0] === 6 ) // timeout?\n    {\n        msg = {payload:connectMsg};\n        context.set(\"state\", \"connectRequested\")\n    }    \n    else\n    {\n        msg = {payload:ackMsg};\n    }\n    node.send(msg);\n    node.done();\n    break;\n default:\n    // code block\n}\n\n\n\n\n\n\n\n\n\n\n\n//if ( ( context.get(\"state\") === \"start\" ) || ( msg.payload == \"XX\" ) )\n\nreturn;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\ncontext.set(\"state\", \"start\");",
+        "finalize": "",
+        "x": 340,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d37dc93.e0a7938",
+        "type": "debug",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 810,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ced1283c.896ae8",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "name": "send [4]",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[\"0x7B\",\"0x22\",\"0x64\",\"0x64\",\"0x6D\",\"0x70\",\"0x22\",\"0x3A\",\"0x5B\",\"0x34\",\"0x5D\",\"0x7D\",\"0x0D\"]",
+        "payloadType": "bin",
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "f3244387.823ab"
+            ]
+        ]
+    },
+    {
+        "id": "1a10fcab.a2f453",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "name": "send [2]",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[\"0x7B\",\"0x22\",\"0x64\",\"0x64\",\"0x6D\",\"0x70\",\"0x22\",\"0x3A\",\"0x5B\",\"0x32\",\"0x5D\",\"0x7D\",\"0x0D\"]",
+        "payloadType": "bin",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "f3244387.823ab"
+            ]
+        ]
+    },
+    {
+        "id": "21ab81eb.b2d2ae",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "name": "send [1,1,0,0,129]",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "[\"0x7B\",\"0x22\",\"0x64\",\"0x64\",\"0x6D\",\"0x70\",\"0x22\",\"0x3A\",\"0x5B\",\"0x31\",\"0x2c\",\"0x31\",\"0x2c\",\"0x30\",\"0x2c\",\"0x30\",\"0x2c\",\"0x31\",\"0x32\",\"0x39\",\"0x5D\",\"0x7D\",\"0x0D\"]",
+        "payloadType": "bin",
+        "x": 190,
+        "y": 320,
+        "wires": [
+            [
+                "f3244387.823ab"
+            ]
+        ]
+    },
+    {
+        "id": "1c14875.f290779",
+        "type": "change",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "message ack [4]",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[\"0x7B\",\"0x22\",\"0x64\",\"0x64\",\"0x6D\",\"0x70\",\"0x22\",\"0x3A\",\"0x5B\",\"0x34\",\"0x5D\",\"0x7D\",\"0x0D\"]",
+                "tot": "bin"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "f3244387.823ab"
+            ]
+        ]
+    },
+    {
+        "id": "17e78fa0.64333",
+        "type": "debug",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "af5051bf.da7bf",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "toString",
+        "func": "var str = msg.payload.toString();\nmsg.payload = str.replace(/\\r/,\"\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 630,
+        "y": 320,
+        "wires": [
+            [
+                "d37dc93.e0a7938",
+                "d9dcf166.a3f72"
+            ]
+        ]
+    },
+    {
+        "id": "db0aab68.5d9aa8",
+        "type": "file",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "filename": "ddmp_dump.txt",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 780,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "30408bc4.39e694",
+        "type": "debug",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1623ad22.7cfbc3",
+        "type": "exec",
+        "z": "d5acb2a.2ea075",
+        "command": "python -u /home/chris/.node-red/cfx3.py",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 400,
+        "y": 560,
+        "wires": [
+            [
+                "d9dcf166.a3f72",
+                "17e78fa0.64333"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e73a54c1.14cb58",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "run",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 520,
+        "wires": [
+            [
+                "1623ad22.7cfbc3",
+                "c5443a5e.c5c5c8"
+            ]
+        ]
+    },
+    {
+        "id": "975ab793.989788",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "kill",
+        "props": [
+            {
+                "p": "kill",
+                "v": "-9",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 680,
+        "wires": [
+            [
+                "1623ad22.7cfbc3",
+                "c5443a5e.c5c5c8"
+            ]
+        ]
+    },
+    {
+        "id": "c8fb49e2.b2d9b8",
+        "type": "inject",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 980,
+        "y": 760,
+        "wires": [
+            [
+                "82389517.a2d328"
+            ]
+        ]
+    },
+    {
+        "id": "82389517.a2d328",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "name": "Test Notification Message",
+        "func": "let message = \"Hi! This is a test notification from Vista to Pushover.\\n\\n\";\n\nmsg.headers = {\n    \"content-type\": \"application/x-www-form-urlencoded\"\n};\n\nmsg.payload = { \n//  user: global.get('settings2')['pushover_key'],\n    user: 'ue4k1ki2841ym1h8fy4qfbgti1wxcd',\n    token: 'A7x1c7xipgbqfd885kqfbavpjtsb6b',\n    title: 'Vista Notification',\n    message: message,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1230,
+        "y": 760,
+        "wires": [
+            [
+                "f491a97c.b00fe8"
+            ]
+        ]
+    },
+    {
+        "id": "f491a97c.b00fe8",
+        "type": "http request",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "name": "Post to Pushover",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.pushover.net/1/messages.json",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1270,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "426da55e.db681c",
+        "type": "function",
+        "z": "d5acb2a.2ea075",
+        "name": "Freezer Warning",
+        "func": "var message;\n\nif ( msg.payload == \"XX\" )\n{\n    message = \"Freezer Warning.\\n\\n\";\n}\n\nmsg.headers = {\n    \"content-type\": \"application/x-www-form-urlencoded\"\n};\n\nmsg.payload = { \n//  user: global.get('settings2')['pushover_key'],\n    user: 'ue4k1ki2841ym1h8fy4qfbgti1wxcd',\n    token: 'A7x1c7xipgbqfd885kqfbavpjtsb6b',\n    title: 'Vista Notification',\n    message: message\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1210,
+        "y": 700,
+        "wires": [
+            [
+                "f491a97c.b00fe8"
+            ]
+        ]
+    },
+    {
+        "id": "1d89cfb5.6cf8f",
+        "type": "debug",
+        "z": "d5acb2a.2ea075",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "c5443a5e.c5c5c8",
+        "type": "exec",
+        "z": "d5acb2a.2ea075",
+        "d": true,
+        "command": "perl /home/chris/.node-red/getTempSM.pl",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 460,
+        "y": 680,
+        "wires": [
+            [
+                "25ee29cf.d0a4c6",
+                "17e78fa0.64333"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d27b32d5.624e2",
+        "type": "comment",
+        "z": "d5acb2a.2ea075",
+        "name": "Dometic cooler - not reiliable",
+        "info": "",
+        "x": 180,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c0ef364f.a66918",
+        "type": "ui_group",
+        "name": "Freezer",
+        "tab": "e9485d74.46613",
+        "order": 16,
+        "disp": false,
+        "width": "3",
+        "collapse": false
+    },
+    {
+        "id": "e9485d74.46613",
+        "type": "ui_tab",
+        "name": "Vista",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

@@ -1,0 +1,239 @@
+[
+    {
+        "id": "4ba90b14.0ec914",
+        "type": "tab",
+        "label": "J1939",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "922800bc.e2e58",
+        "type": "comment",
+        "z": "4ba90b14.0ec914",
+        "name": "J1939",
+        "info": "",
+        "x": 90,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "bf8a5fc7.d2366",
+        "type": "mqtt in",
+        "z": "4ba90b14.0ec914",
+        "name": "",
+        "topic": "J1939",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1ab587c2.920688",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "e4b7c592.466058"
+            ]
+        ]
+    },
+    {
+        "id": "e4b7c592.466058",
+        "type": "switch",
+        "z": "4ba90b14.0ec914",
+        "name": "PGN selector",
+        "property": "payload.PGN",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "53248",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "65256",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "65110",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "65276",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 300,
+        "y": 180,
+        "wires": [
+            [
+                "1bab58ce.628ff7"
+            ],
+            [
+                "fc59e4e.a994018"
+            ],
+            [
+                "8c9ad9cc.340528"
+            ],
+            [
+                "72d1e5bb.98599c"
+            ]
+        ]
+    },
+    {
+        "id": "89889fa5.e0c8",
+        "type": "ui_gauge",
+        "z": "4ba90b14.0ec914",
+        "name": "",
+        "group": "7a2fe6ba.e86f98",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "gage",
+        "title": "Fuel",
+        "label": "%",
+        "format": "{{ msg.payload | number:0}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3737",
+            "#e6e600",
+            "#00b500"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 970,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "a091b99b.bd1868",
+        "type": "ui_gauge",
+        "z": "4ba90b14.0ec914",
+        "name": "",
+        "group": "7a2fe6ba.e86f98",
+        "order": 2,
+        "width": 3,
+        "height": 3,
+        "gtype": "gage",
+        "title": "DEF",
+        "label": "%",
+        "format": "{{ msg.payload | number:0}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3737",
+            "#e6e600",
+            "#00b500"
+        ],
+        "seg1": "33",
+        "seg2": "66",
+        "x": 970,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "fc59e4e.a994018",
+        "type": "function",
+        "z": "4ba90b14.0ec914",
+        "name": "VDS - Vehicle Speed/Direction",
+        "func": "// Vehicle Direction, PGN 65256, byte 1&2\n\nvar input = msg.payload.Data.split(\",\");\n\nvar b1 = parseInt(input[0],16);\nvar b2 = parseInt(input[1],16);\n\nvar output=0;\n\noutput= b2;\noutput= output << 8;\noutput +=b1;\n\noutput= output/128   // 1 bit = 1/128 of a degree\n\nmsg = {payload:output};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 610,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "72d1e5bb.98599c",
+        "type": "function",
+        "z": "4ba90b14.0ec914",
+        "name": "DD - Dash Display",
+        "func": "// Fuel Level, PGN 65276, byte 2\n\nvar input = msg.payload.Data.split(\",\");\n\nvar b2 = input[1];    // fuel level 1\n\nif ( b2 != 'ff' )\n{\n    var output = (parseInt(b2,16) * 0.4);   // % of tank volume\n\n    msg = {payload: output};\n\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 260,
+        "wires": [
+            [
+                "89889fa5.e0c8"
+            ]
+        ]
+    },
+    {
+        "id": "1bab58ce.628ff7",
+        "type": "debug",
+        "z": "4ba90b14.0ec914",
+        "name": "53248",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "8c9ad9cc.340528",
+        "type": "function",
+        "z": "4ba90b14.0ec914",
+        "name": "CTI1 - Catalyst Tank Information 1",
+        "func": "// PGN 65110\n\nvar input = msg.payload.Data.split(\",\");\n\nvar b1 = parseInt(input[0],16);     // catalyst tank level\nvar b2 = parseInt(input[1],16);     // catalyst tank temperature\n//var b3 = parseInt(input[2],16);   // catalyst tank level 2 lsb\n//var b4 = parseInt(input[3],16);   // catalyst tank level 2 msb\n//var b5 = parseInt(input[4],16);   // catalyst tank level FMI (5 bits)\n//var b6 = parseInt(input[5],16);   // catalyst tank temperature FMI (5 bits)\n//var b7 = parseInt(input[6],16);   // not used?\n//var b8 = parseInt(input[7],16);   // not used?\n\nvar level = (b1 * 0.4);     // % tank volume\n\nvar temp = b2 - 40;         // offset\ntemp = (temp * 9/5) + 32;   // C to F\n\nmsg1 = { payload:level };\nmsg2 = { payload:temp };\n\nreturn [ msg1, msg2 ];",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 220,
+        "wires": [
+            [
+                "a091b99b.bd1868"
+            ]
+        ]
+    },
+    {
+        "id": "1ab587c2.920688",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "jcomm",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "7a2fe6ba.e86f98",
+        "type": "ui_group",
+        "name": "Engine",
+        "tab": "e9485d74.46613",
+        "order": 7,
+        "disp": false,
+        "width": 6,
+        "collapse": false
+    },
+    {
+        "id": "e9485d74.46613",
+        "type": "ui_tab",
+        "name": "Vista",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

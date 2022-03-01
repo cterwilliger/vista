@@ -1,0 +1,505 @@
+[
+    {
+        "id": "3ac59a9b.ae94b6",
+        "type": "tab",
+        "label": "Network",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "6fd74295.d58e8c",
+        "type": "inject",
+        "z": "3ac59a9b.ae94b6",
+        "name": "DBM",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "DBM",
+        "payload": "cat /status/wan/devices/mdm-378689cb/diagnostics/DBM",
+        "payloadType": "str",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "3279ba7c.35a8a6"
+            ]
+        ]
+    },
+    {
+        "id": "601aee21.9bbe9",
+        "type": "inject",
+        "z": "3ac59a9b.ae94b6",
+        "name": "RSRQ",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "RSRQ",
+        "payload": "cat /status/wan/devices/mdm-378689cb/diagnostics/RSRQ",
+        "payloadType": "str",
+        "x": 140,
+        "y": 220,
+        "wires": [
+            [
+                "3279ba7c.35a8a6"
+            ]
+        ]
+    },
+    {
+        "id": "3279ba7c.35a8a6",
+        "type": "bigssh",
+        "z": "3ac59a9b.ae94b6",
+        "name": "CBA850",
+        "commandLine": "",
+        "commandArgs": "",
+        "minError": 1,
+        "minWarning": 1,
+        "noStdin": false,
+        "format": "ascii",
+        "payloadIsArg": true,
+        "myssh": "eb9d7241.c9281",
+        "x": 420,
+        "y": 240,
+        "wires": [
+            [
+                "8b66f9cc.c0cd38"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "6952ae76.fa537",
+        "type": "inject",
+        "z": "3ac59a9b.ae94b6",
+        "name": "RSRP",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "RSRP",
+        "payload": "cat /status/wan/devices/mdm-378689cb/diagnostics/RSRP",
+        "payloadType": "str",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "3279ba7c.35a8a6"
+            ]
+        ]
+    },
+    {
+        "id": "353b8edc.ec3322",
+        "type": "inject",
+        "z": "3ac59a9b.ae94b6",
+        "name": "SINR",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "4",
+        "topic": "SINR",
+        "payload": "cat /status/wan/devices/mdm-378689cb/diagnostics/SINR",
+        "payloadType": "str",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "3279ba7c.35a8a6"
+            ]
+        ]
+    },
+    {
+        "id": "5a3529d9.697738",
+        "type": "ui_level",
+        "z": "3ac59a9b.ae94b6",
+        "group": "3a73c64.b03303a",
+        "order": 1,
+        "width": 7,
+        "height": 1,
+        "name": "RSSI",
+        "label": "RSSI",
+        "colorHi": "#00ff00",
+        "colorWarn": "#ffff00",
+        "colorNormal": "#ff0006",
+        "colorOff": "#595959",
+        "min": "-85",
+        "max": "-45",
+        "segWarn": "",
+        "segHigh": "",
+        "unit": "dBm",
+        "layout": "sh",
+        "channelA": "",
+        "channelB": "",
+        "decimals": 0,
+        "animations": "soft",
+        "shape": 2,
+        "colorschema": "rainbow",
+        "textoptions": "default",
+        "colorText": "#eeeeee",
+        "fontLabel": "",
+        "fontValue": "",
+        "fontSmall": "",
+        "colorFromTheme": true,
+        "textAnimations": false,
+        "hideValue": false,
+        "tickmode": "off",
+        "peakmode": false,
+        "property": "payload",
+        "peaktime": 3000,
+        "x": 970,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "8b66f9cc.c0cd38",
+        "type": "switch",
+        "z": "3ac59a9b.ae94b6",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "DBM",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "RSRQ",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "RSRP",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SINR",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "51e6bd9.4d42144"
+            ],
+            [
+                "d8199427.347e58"
+            ],
+            [
+                "5077725.aa6898c"
+            ],
+            [
+                "156c5a3f.220486"
+            ]
+        ]
+    },
+    {
+        "id": "51e6bd9.4d42144",
+        "type": "function",
+        "z": "3ac59a9b.ae94b6",
+        "name": "",
+        "func": "//msg.payload = msg.payload.replace(/\\n/g,\" \");\n\n//msg.payload = parseInt(msg.payload, 10);\n\nmsg.payload = msg.payload.replace(/[\\0\\r\\n\"']/g, \"\");\n\n\n\n\n\n//msg.payload = msg.payload.replace(/-/g,'-');\n\nmsg.payload = msg.payload.trim();\nmsg.topic = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 180,
+        "wires": [
+            [
+                "5a3529d9.697738"
+            ]
+        ]
+    },
+    {
+        "id": "d8199427.347e58",
+        "type": "function",
+        "z": "3ac59a9b.ae94b6",
+        "name": "",
+        "func": "//msg.payload = msg.payload.replace(/\\n/g,\" \");\n\n//msg.payload = parseInt(msg.payload, 10);\n\nmsg.payload = msg.payload.replace(/[\\0\\r\\n\"']/g, \"\");\n\n\n\n\n\n//msg.payload = msg.payload.replace(/-/g,'-');\n\nmsg.payload = msg.payload.trim();\nmsg.topic = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 220,
+        "wires": [
+            [
+                "e845585e.601da8"
+            ]
+        ]
+    },
+    {
+        "id": "e845585e.601da8",
+        "type": "ui_level",
+        "z": "3ac59a9b.ae94b6",
+        "group": "3a73c64.b03303a",
+        "order": 3,
+        "width": 7,
+        "height": 1,
+        "name": "RSRQ",
+        "label": "RSRQ",
+        "colorHi": "#00ff00",
+        "colorWarn": "#ffff00",
+        "colorNormal": "#ff0006",
+        "colorOff": "#595959",
+        "min": "-13",
+        "max": "-9",
+        "segWarn": "",
+        "segHigh": "",
+        "unit": "dB",
+        "layout": "sh",
+        "channelA": "",
+        "channelB": "",
+        "decimals": 0,
+        "animations": "soft",
+        "shape": 2,
+        "colorschema": "rainbow",
+        "textoptions": "default",
+        "colorText": "#eeeeee",
+        "fontLabel": "",
+        "fontValue": "",
+        "fontSmall": "",
+        "colorFromTheme": true,
+        "textAnimations": false,
+        "hideValue": false,
+        "tickmode": "off",
+        "peakmode": false,
+        "property": "payload",
+        "peaktime": 3000,
+        "x": 970,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5077725.aa6898c",
+        "type": "function",
+        "z": "3ac59a9b.ae94b6",
+        "name": "",
+        "func": "//msg.payload = msg.payload.replace(/\\n/g,\" \");\n\n//msg.payload = parseInt(msg.payload, 10);\n\nmsg.payload = msg.payload.replace(/[\\0\\r\\n\"']/g, \"\");\n\n\n\n\n\n//msg.payload = msg.payload.replace(/-/g,'-');\n\nmsg.payload = msg.payload.trim();\nmsg.topic = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 260,
+        "wires": [
+            [
+                "52bb2486.4d482c"
+            ]
+        ]
+    },
+    {
+        "id": "156c5a3f.220486",
+        "type": "function",
+        "z": "3ac59a9b.ae94b6",
+        "name": "",
+        "func": "//msg.payload = msg.payload.replace(/\\n/g,\" \");\n\n//msg.payload = parseInt(msg.payload, 10);\n\nmsg.payload = msg.payload.replace(/[\\0\\r\\n\"']/g, \"\");\n\n\n\n\n\n//msg.payload = msg.payload.replace(/-/g,'-');\n\nmsg.payload = msg.payload.trim();\nmsg.topic = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 300,
+        "wires": [
+            [
+                "d347d129.4dd1"
+            ]
+        ]
+    },
+    {
+        "id": "52bb2486.4d482c",
+        "type": "ui_level",
+        "z": "3ac59a9b.ae94b6",
+        "group": "3a73c64.b03303a",
+        "order": 2,
+        "width": 7,
+        "height": 1,
+        "name": "RSRP",
+        "label": "RSRP",
+        "colorHi": "#00ff00",
+        "colorWarn": "#ffff00",
+        "colorNormal": "#ff0006",
+        "colorOff": "#595959",
+        "min": "-120",
+        "max": "-70",
+        "segWarn": "",
+        "segHigh": "",
+        "unit": "dBm",
+        "layout": "sh",
+        "channelA": "",
+        "channelB": "",
+        "decimals": 0,
+        "animations": "soft",
+        "shape": 2,
+        "colorschema": "rainbow",
+        "textoptions": "default",
+        "colorText": "#eeeeee",
+        "fontLabel": "",
+        "fontValue": "",
+        "fontSmall": "",
+        "colorFromTheme": true,
+        "textAnimations": false,
+        "hideValue": false,
+        "tickmode": "off",
+        "peakmode": false,
+        "property": "payload",
+        "peaktime": 3000,
+        "x": 970,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d347d129.4dd1",
+        "type": "ui_level",
+        "z": "3ac59a9b.ae94b6",
+        "group": "3a73c64.b03303a",
+        "order": 4,
+        "width": 7,
+        "height": 1,
+        "name": "SINR",
+        "label": "SINR",
+        "colorHi": "#00ff00",
+        "colorWarn": "#ffff00",
+        "colorNormal": "#ff0006",
+        "colorOff": "#595959",
+        "min": "0",
+        "max": "15",
+        "segWarn": "",
+        "segHigh": "",
+        "unit": "dB",
+        "layout": "sh",
+        "channelA": "",
+        "channelB": "",
+        "decimals": 0,
+        "animations": "soft",
+        "shape": 2,
+        "colorschema": "rainbow",
+        "textoptions": "default",
+        "colorText": "#eeeeee",
+        "fontLabel": "",
+        "fontValue": "",
+        "fontSmall": "",
+        "colorFromTheme": true,
+        "textAnimations": false,
+        "hideValue": false,
+        "tickmode": "off",
+        "peakmode": false,
+        "property": "payload",
+        "peaktime": 3000,
+        "x": 970,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "4da5ceb.f76b43",
+        "type": "inject",
+        "z": "3ac59a9b.ae94b6",
+        "name": "Test (-33)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "\"-33\"",
+        "payloadType": "str",
+        "x": 600,
+        "y": 400,
+        "wires": [
+            [
+                "51e6bd9.4d42144",
+                "d8199427.347e58",
+                "5077725.aa6898c",
+                "156c5a3f.220486"
+            ]
+        ]
+    },
+    {
+        "id": "9972e045.9c8ee",
+        "type": "comment",
+        "z": "3ac59a9b.ae94b6",
+        "name": "Cell signal strength from CBA850",
+        "info": "",
+        "x": 190,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "eb9d7241.c9281",
+        "type": "SSH_Credentials",
+        "host": "192.168.10.1",
+        "port": "22",
+        "userlabel": "admin@192.168.10.1"
+    },
+    {
+        "id": "3a73c64.b03303a",
+        "type": "ui_group",
+        "name": "Network",
+        "tab": "e9485d74.46613",
+        "order": 10,
+        "disp": false,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e9485d74.46613",
+        "type": "ui_tab",
+        "name": "Vista",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

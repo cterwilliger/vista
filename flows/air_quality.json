@@ -1,0 +1,119 @@
+[
+    {
+        "id": "b5de5e08.033c9",
+        "type": "tab",
+        "label": "Air Quality",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c88f9097.06f56",
+        "type": "comment",
+        "z": "b5de5e08.033c9",
+        "name": "Air quality from Ikea Vindriktning",
+        "info": "",
+        "x": 190,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2d25d103.7a572e",
+        "type": "mqtt in",
+        "z": "b5de5e08.033c9",
+        "name": "Vindriktning",
+        "topic": "esp8266-vindriktning-particle-sensor/VINDRIKTNING-85ABD9/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "a49b969c.aa0498",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "df19c97f.c78088"
+            ]
+        ]
+    },
+    {
+        "id": "df19c97f.c78088",
+        "type": "rbe",
+        "z": "b5de5e08.033c9",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "property": "payload",
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "11f85cdf.156f03"
+            ]
+        ]
+    },
+    {
+        "id": "11f85cdf.156f03",
+        "type": "ui_gauge",
+        "z": "b5de5e08.033c9",
+        "name": "",
+        "group": "e9cfe2b7.111c4",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "gage",
+        "title": "PM2.5",
+        "label": "ug/m3",
+        "format": "{{msg.payload.pm25}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3737"
+        ],
+        "seg1": "35",
+        "seg2": "86",
+        "x": 490,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a49b969c.aa0498",
+        "type": "mqtt-broker",
+        "name": "vista:1883",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "e9cfe2b7.111c4",
+        "type": "ui_group",
+        "name": "Air Quality",
+        "tab": "e9485d74.46613",
+        "order": 15,
+        "disp": false,
+        "width": "3",
+        "collapse": false
+    },
+    {
+        "id": "e9485d74.46613",
+        "type": "ui_tab",
+        "name": "Vista",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
