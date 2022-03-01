@@ -34,3 +34,30 @@ This flow creates the date & time banner at the top.
 ### Power flow
 This flow displays AC & DC power as well as solar power and battery state of charge.
 ![](img/power.jpg)
+### Temperatures flow
+This flow displays Temperatures of the generator bay, battery bay, and wet bay.  Certainly other temperatures could be displayed if desired.
+![](img/temperature.jpg)
+
+### Tanks flow
+This flow displays the levels of the fresh, black, and grey tanks.
+![](img/tanks.jpg)
+
+### Weather flow
+This flow shows current and forcasted weather for the RV's current location.  Location is determined by GPS coordinates.  OpenWeatherMap has many options and other weather products available that could be displayed.  A free account from OpenWeatherMap will give you access to most everything you need, but be careful of their query rate limits.
+![](img/weather.jpg)
+
+### TPMS flow
+This flow displays TPMS data from a TST-507 system.  The flow could be easily adapted to other TPMS formats, but does require specific backend hardware and software to deliver the data to the flow.
+![](img/tpms.jpg)
+
+### J1939 flow
+This flow is only pulling data for the fuel and DEF levels.  This also requires additional hardware and software to feed the flow.  Keep in mind that the J1939 bus is only active while the ignition key is ON.
+![](img/j1939.jpg)
+
+### Map & Compass flow
+This flow shows a map from OpenStreetMap and an aviation style compass rose.  The flow gets data from onboard GPS.  The compass computes its values from successive GPS coordinates while moving.  This means it is not accurate while not moving.  It could easily be fed from a dedicated compass module.  My RV, a 2019 model, while having a compass module that feeds the RV dash, does not make that available to the RV-C network.
+![](img/map.jpg)
+
+### Network flow
+This flow shows the four main signal strenth values from a cellular modem.  This is highly dependent on the specific modem you are using.  Other things could be integrated such as download/upload speeds.
+![](img/network.jpg)
