@@ -28,7 +28,7 @@ Node-RED is a programming tool for wiring together hardware devices, APIs and on
 The flows are contained in the folder "flows".  They are compacted text files that can be copied and imported into a Node-RED instance.  I have included jpg image files of the flows in the "img" folder.
 
 ### Date/Time flow
-This flow creates the date & time banner at the top.
+This flow creates the date & time banner at the top.  I have had some difficulty getting time zones to change automatically when we move.  That's why there is four "timezone" setting injection nodes on this flow...
 ![](img/date-time.jpg)
 
 ### Power flow
@@ -51,7 +51,7 @@ This flow displays TPMS data from a TST-507 system.  The flow could be easily ad
 ![](img/tpms.jpg)
 
 ### J1939 flow
-This flow is only pulling data for the fuel and DEF levels.  This also requires additional hardware and software to feed the flow.  Keep in mind that the J1939 bus is only active while the ignition key is ON.
+This flow is only pulling data for the fuel and DEF levels.  This also requires additional hardware and software to feed the flow.  Keep in mind that the J1939 bus is only active while the ignition key is ON.  VDS may be available on newer RV models.  It is not on my 2019.
 ![](img/j1939.jpg)
 
 ### Map & Compass flow
